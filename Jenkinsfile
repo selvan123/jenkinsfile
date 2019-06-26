@@ -1,6 +1,6 @@
 node 
 {
-     stage('BUILD')
+     stage('Initialize')
     {
     
 		jdk = tool name: 'jdk'
