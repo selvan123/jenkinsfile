@@ -1,5 +1,10 @@
 node 
 {
+	 stage('GitSCM')
+    {
+        git url: 'https://github.com/selvan123/petclinic.git'
+    }
+	
      stage('Initialize')
     {
     
@@ -16,10 +21,7 @@ node
     }
    
     
-     stage('GitSCM')
-    {
-        git url: 'https://github.com/selvan123/petclinic.git'
-    }
+    
     stage('Build Stage')
     {
 		def mvnHome = tool 'mvn'
