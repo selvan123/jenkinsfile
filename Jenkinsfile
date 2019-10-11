@@ -52,7 +52,7 @@ node
 	
 	stage('Publish to Nexus')
     {
-        sh 'mvn deploy:deploy-file -DgroupId=com.cicd -DartifactId=petclinic -Dversion=${BUILD_NUMBER} -DgeneratePom=true -Dpackaging=war -DrepositoryId=nexus-snapshots -Durl=http://10.0.2.18:8081/nexus/content/repositories/petclinic/  -Dfile=/root/.jenkins/jobs/PipelineScript_2019/workspace/target/petclinic.war'
+        sh 'mvn deploy:deploy-file -DgroupId=com.cicd -DartifactId=petclinic -Dversion=${BUILD_NUMBER} -DgeneratePom=true -Dpackaging=war -DrepositoryId=nexus-snapshots -Durl=http://10.0.2.18:8081/nexus/content/repositories/petclinic/  -Dfile=/root/.jenkins/jobs/demo-scripted-pipeline/workspace/target/petclinic.war'
     }
     
      stage("Deploy to Rundeck")
@@ -71,7 +71,7 @@ node
 		stage('Selenium Testing')
     {
         git url: 'https://github.com/selvan123/petclinic.git'
-        sh "cd /root/.jenkins/jobs/PipelineScript_2019/workspace/TestCases"
+        sh "cd /root/.jenkins/jobs/demo-scripted-pipeline/workspace/TestCases"
         wrap([$class: 'Xvfb', displayNameOffset: 0, installationName: 'Xvfb', screen: '1600x1200x32']) 
         {
             sh "mvn test"
@@ -82,12 +82,12 @@ node
     stage('Performance testing')
     {
         sh "sudo bash"
-		sh "rm -rf /root/.jenkins/jobs/PipelineScript_2019/workspace/Petclinic.jmx"
-		sh "rm -rf /root/.jenkins/jobs/PipelineScript_2019/workspace/Petclinic.jtl"
-		sh "rm -rf /root/.jenkins/jobs/PipelineScript_2019/workspace/Petclinic.xml"
+		sh "rm -rf /root/.jenkins/jobs/demo-scripted-pipeline/workspace/Petclinic.jmx"
+		sh "rm -rf /root/.jenkins/jobs/demo-scripted-pipeline/workspace/Petclinic.jtl"
+		sh "rm -rf /root/.jenkins/jobs/demo-scripted-pipeline/workspace/Petclinic.xml"
 		sh "wget https://s3-us-west-2.amazonaws.com/demo-pipeline-devops/Petclinic.jmx"
 
-		sh "sudo /home/ec2-user/jmeter_new/apache-jmeter-4.0/bin/jmeter.sh -Jjmeter.save.saveservice.output_format=xml -n -t /root/.jenkins/jobs/PipelineScript_2019/workspace/Petclinic.jmx -l Petclinic.jtl"
+		sh "sudo /home/ec2-user/jmeter_new/apache-jmeter-4.0/bin/jmeter.sh -Jjmeter.save.saveservice.output_format=xml -n -t /root/.jenkins/jobs/demo-scripted-pipeline/workspace/Petclinic.jmx -l Petclinic.jtl"
         
     }
     
