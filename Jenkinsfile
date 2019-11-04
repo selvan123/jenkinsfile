@@ -94,7 +94,7 @@ node
     stage('Security Testing using ZAP')
     {
         sh "cd /var/lib/docker"
-        sh "sudo docker run -t owasp/zap2docker-weekly zap-baseline.py -t http://petclinic.kpg3jdvrcr.us-west-2.elasticbeanstalk.com/ || true"
+        sh "sudo docker run -t owasp/zap2docker-weekly zap-baseline.py -t http://petclinic.rzqfjfdkk2.us-west-2.elasticbeanstalk.com/ || true"
         
     }
 }
