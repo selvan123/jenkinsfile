@@ -1,0 +1,52 @@
+node 
+{
+	 stage('GitSCM')
+    {
+        git url: 'https://github.com/selvan123/petclinic.git'
+    }
+	
+     stage('Initialize')
+    {
+    
+		jdk = tool name: 'jdk'
+		env.JAVA_HOME = "${jdk}"
+		echo "jdk installation path is: ${jdk}"
+		// next 2 are equivalents
+		sh "${jdk}/bin/java -version"
+		// note that simple quote strings are not evaluated by Groovy
+		// substitution is done by shell script using environment
+		sh '$JAVA_HOME/bin/java -version'
+		def mvnHome = tool 'mvn'
+	//	sh "${mvnHome}/bin/mvn -B verify"
+    }
+   
+    
+    
+    stage('Build Stage')
+    {
+		def mvnHome = tool 'mvn'
+		sh "${mvnHome}/bin/mvn -B verify"
+    }
+    
+  
+	
+	
+	stage('Publish to Nexus')
+    {
+        sh 'mvn deploy:deploy-file -DgroupId=com.cicd -DartifactId=petclinic -Dversion=${BUILD_NUMBER} -DgeneratePom=true -Dpackaging=war -DrepositoryId=nexus-snapshots -Durl=http://10.0.2.18:8081/nexus/content/repositories/petclinic/  -Dfile=/root/.jenkins/jobs/demo-scripted-pipeline/workspace/target/petclinic.war'
+    }
+    
+     stage("Deploy to Rundeck")
+	{
+	   step([$class: "RundeckNotifier", 
+            includeRundeckLogs: true, 
+            jobId: "38f04e85-9da9-49ab-a17a-3a5792cdd666", 
+            rundeckInstance: "Rundeck", 
+            shouldFailTheBuild: true, 
+            shouldWaitForRundeckJob: true, 
+            tailLog: true]) 
+
+	}
+	
+
+	}
